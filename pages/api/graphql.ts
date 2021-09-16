@@ -1,25 +1,11 @@
-import { ApolloServer, gql } from "apollo-server-micro";
+import { initializeMongoConnector } from "@graphql/mongodb-connector";
+import { resolvers } from "@graphql/resolvers";
+import { typeDefs } from "@graphql/schema";
+import { ApolloServer } from "apollo-server-micro";
 /* Disclaimer: got a lot of this code from https://github.com/vercel/next.js/tree/canary/examples/api-routes-graphql */
 
-const typeDefs = gql`
-  type Query {
-    users: [User!]!
-  }
-  type User {
-    name: String
-  }
-`;
-
-const resolvers = {
-  Query: {
-    users(parent, args, context) {
-      return [{ name: "Nextjs" }];
-    },
-  },
-};
-
+const connector = initializeMongoConnector();
 const apolloServer = new ApolloServer({ typeDefs, resolvers });
-
 const startServer = apolloServer.start();
 
 export default async function handler(req, res) {
@@ -31,6 +17,7 @@ export default async function handler(req, res) {
     return false;
   }
 
+  await connector;
   await startServer;
   await apolloServer.createHandler({ path: "/api/graphql" })(req, res);
 }

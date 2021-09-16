@@ -23,7 +23,7 @@
       "@hooks/*": ["hooks/*"],
       "@models/*": ["models/*"],
       "@atoms": ["atoms"],
-      "@styles/*": ["styles/*"],
+      "@graphql/*": ["graphql/*"],
     }
   },
   "include": [

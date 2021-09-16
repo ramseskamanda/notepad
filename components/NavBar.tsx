@@ -4,6 +4,7 @@ import { useTheme } from "@hooks/useTheme";
 import useBreakpoint from "use-breakpoint";
 import { BREAKPOINTS, If } from "./utils";
 import { useRouter } from "next/dist/client/router";
+import { v4 as uuid } from "uuid";
 
 interface NavBarProps {
   title?: string;
@@ -21,7 +22,7 @@ export const NavBar: React.FC<NavBarProps> = ({ title }) => {
       <If condition={breakpoint === "mobile" && router.pathname !== "/"}>
         <Button icon text={<ChevronLeft size={20} />} onClick={() => router.replace("/")} />
       </If>
-      <Button icon text={<Plus size={20} />} onClick={() => alert("add new note")} />
+      <Button icon text={<Plus size={20} />} onClick={() => router.push(`/${uuid()}`)} />
       <h1 className={titleClasses}>{title ?? "My awesome Notepad"}</h1>
       <Button icon text={theme === "light" ? <Sun /> : <Moon />} onClick={toggleTheme} />
     </nav>
