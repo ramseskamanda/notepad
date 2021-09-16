@@ -7,7 +7,7 @@ interface ForProps<T> {
 }
 
 function For<T>({ render, each, fadeIn = false }: ForProps<T>) {
-  const children = each.map(render);
+  const children = each?.map(render) ?? [];
 
   if (fadeIn) return <FadeIn>{children}</FadeIn>;
   return <>{children}</>;

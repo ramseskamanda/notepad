@@ -22,7 +22,7 @@
       "@components/*": ["components/*"],
       "@hooks/*": ["hooks/*"],
       "@models/*": ["models/*"],
-      "@atoms": ["atoms"],
+      "@atoms/*": ["atoms/*"],
       "@graphql/*": ["graphql/*"],
     }
   },
