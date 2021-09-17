@@ -30,8 +30,8 @@ const Home: NextPage = () => {
 };
 
 export async function getServerSideProps() {
-  await ensureMongoInit();
-  const notes = await NoteModel.find({});
+  const initialized = await ensureMongoInit();
+  const notes = !initialized ? [] : await NoteModel.find({});
   return { props: { initialState: arrayToRecord(notes) } };
 }
 
