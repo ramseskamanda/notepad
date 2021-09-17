@@ -1,28 +1,31 @@
-import { CurrentNoteAtom } from "@atoms/notes";
 import { useAtom } from "jotai";
 import { useState } from "react";
-import { poster } from "utils/axios";
-import { Button } from "./core/Button";
+import { poster } from "@utils";
+import { Button } from "@components";
+import { NotesAtom, notesReducer, SelectedNoteAtom } from "@atoms";
 
 const wrapperClasses = "absolute bottom-4 right-4 text-base text-blue-500";
 export const Save: React.FC = () => {
-  const [current, setCurrent] = useAtom(CurrentNoteAtom);
-  const [error, setError] = useState<string>("");
+  const [selected] = useAtom(SelectedNoteAtom);
+  const [notes, setNotes] = useAtom(NotesAtom);
+  const [error, setError] = useState<boolean>(false);
+  const current = notes[selected];
 
   const saveNote = async () => {
     try {
-      setError("");
       await poster(`/api/notes/${current._id}`, current.text);
-      setCurrent({ ...current, saved: true });
+      const updated = { ...current, saved: true };
+      setNotes((state) => notesReducer(state, "update", updated));
+      setError(false);
     } catch {
-      //this is bad practice but don't have time
-      setError("Try again");
+      //there's better ways than this to handle errors
+      setError(true);
     }
   };
 
   return (
     <div className={wrapperClasses}>
-      <Button text="Save" onClick={saveNote} error={error} />
+      <Button text={error ? "Retry" : "Save"} onClick={saveNote} />
     </div>
   );
 };

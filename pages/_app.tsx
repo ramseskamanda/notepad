@@ -1,9 +1,9 @@
 import "tailwindcss/tailwind.css";
 import Head from "next/head";
-import type { AppProps } from "next/app";
-import { Layout } from "@components/core/Layout";
+import { NotesAtom } from "@atoms";
+import { Layout } from "@components";
 import { Atom, Provider } from "jotai";
-import { NotesAtom } from "@atoms/notes";
+import type { AppProps } from "next/app";
 
 function MyApp({ Component, pageProps }: AppProps) {
   const { initialState } = pageProps;

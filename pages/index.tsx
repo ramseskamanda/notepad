@@ -1,13 +1,11 @@
 import { NextPage } from "next";
-import useBreakpoint from "use-breakpoint";
-import { BREAKPOINTS } from "@components/utils";
-import { NoteList } from "@components/NoteList";
-import { Note, NoteModel } from "@models/note";
-import React from "react";
-import { Save } from "@components/Save";
 import { useAtom } from "jotai";
-import { SelectedNoteAtom } from "@atoms/notes";
-import { TextArea } from "@components/core/TextArea";
+import useBreakpoint from "use-breakpoint";
+import { NoteModel } from "@models";
+import { SelectedNoteAtom } from "@atoms";
+import { BREAKPOINTS } from "@components/utils";
+import { Save, NoteList, TextArea } from "@components";
+import { ensureMongoInit, arrayToRecord } from "@utils";
 
 const wrapper = "w-full h-full";
 const center = "grid place-items-center";
@@ -32,10 +30,9 @@ const Home: NextPage = () => {
 };
 
 export async function getServerSideProps() {
-  const notes = await NoteModel.find();
-  const initialState: Record<string, Note> = {};
-  notes.forEach((note) => (initialState[note._id] = { _id: note._id, text: note.text, saved: true }));
-  return { props: { initialState } };
+  await ensureMongoInit();
+  const notes = await NoteModel.find({});
+  return { props: { initialState: arrayToRecord(notes) } };
 }
 
 export default Home;

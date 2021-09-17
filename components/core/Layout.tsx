@@ -1,8 +1,7 @@
-import { NavBar } from "@components/NavBar";
-import { SideBar } from "@components/SideBar";
 import { PropsWithChildren } from "react";
 import useBreakpoint from "use-breakpoint";
-import { BREAKPOINTS } from "../utils";
+import { NavBar, SideBar } from "@components";
+import { BREAKPOINTS } from "@components/utils";
 
 interface LayoutProps {
   title?: string;

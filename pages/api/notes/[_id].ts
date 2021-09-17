@@ -1,9 +1,9 @@
-import { initializeMongoConnector } from "utils/mongodb-connector";
-import { NoteModel } from "@models/note";
+import { NoteModel } from "@models";
 import { NextApiHandler } from "next";
+import { ensureMongoInit } from "@utils";
 
 const handler: NextApiHandler = async (req, res) => {
-  await initializeMongoConnector();
+  await ensureMongoInit();
   const {
     method,
     query: { _id },

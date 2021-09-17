@@ -2,7 +2,8 @@ import mongoose from "mongoose";
 
 const uri = process.env.MONGODB_URI;
 
-export const initializeMongoConnector = async (): Promise<void> => {
+export const ensureMongoInit = async (): Promise<void> => {
+  // if (mongoose.connections.length) return;
   try {
     await mongoose.connect(uri);
   } catch {

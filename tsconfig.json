@@ -19,11 +19,12 @@
     "jsx": "preserve",
     "baseUrl": ".",
     "paths": {
-      "@components/*": ["components/*"],
-      "@hooks/*": ["hooks/*"],
-      "@models/*": ["models/*"],
-      "@atoms/*": ["atoms/*"],
-      "@graphql/*": ["graphql/*"],
+      "@components": ["components"],
+      "@components/utils": ["components/utils"],
+      "@hooks": ["hooks"],
+      "@models": ["models"],
+      "@atoms": ["atoms"],
+      "@utils": ["utils"],
     }
   },
   "include": [

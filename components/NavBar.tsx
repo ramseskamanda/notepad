@@ -1,12 +1,11 @@
-import { ChevronLeft, Moon, Plus, Sun } from "react-feather";
-import { Button } from "./core/Button";
-import { useTheme } from "@hooks/useTheme";
-import useBreakpoint from "use-breakpoint";
-import { BREAKPOINTS, If } from "./utils";
-import { v4 as uuid } from "uuid";
 import { useAtom } from "jotai";
-import { NotesAtom, SelectedNoteAtom } from "@atoms/notes";
-import { Note } from "@models/note";
+import { useTheme } from "@hooks";
+import { v4 as uuid } from "uuid";
+import { Button } from "@components";
+import useBreakpoint from "use-breakpoint";
+import { BREAKPOINTS, If } from "@components/utils";
+import { ChevronLeft, Moon, Plus, Sun } from "react-feather";
+import { NotesAtom, notesReducer, SelectedNoteAtom } from "@atoms";
 
 interface NavBarProps {
   title?: string;
@@ -20,12 +19,10 @@ export const NavBar: React.FC<NavBarProps> = ({ title }) => {
   const [, setNotes] = useAtom(NotesAtom);
   const [selected, setSelected] = useAtom(SelectedNoteAtom);
 
-  //FIXME: somehow this breaks when you delete an item then add a new one
   const createNew = () => {
-    const _id = uuid();
-    const newNote: Note = { _id, text: "This is a new note!", saved: false };
-    setNotes((state) => ({ [_id]: newNote, ...state }));
-    setSelected(_id);
+    const note = { _id: uuid(), text: "This is a new note!", saved: false };
+    setNotes((state) => notesReducer(state, "add", note));
+    setSelected(note._id);
   };
 
   return (

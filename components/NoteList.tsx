@@ -1,10 +1,10 @@
-import { For, If } from "./utils";
 import { useAtom } from "jotai";
-import { NotesAtom, SelectedNoteAtom } from "@atoms/notes";
+import { Note } from "@models";
+import { deleter } from "@utils";
+import { Button } from "@components";
+import { For, If } from "@components/utils";
 import { CloudOff, X } from "react-feather";
-import { Button } from "./core/Button";
-import { Note } from "@models/note";
-import { deleter } from "utils/axios";
+import { NotesAtom, notesReducer, SelectedNoteAtom } from "@atoms";
 
 export const NoteList: React.FC = () => {
   const [notes] = useAtom(NotesAtom);
@@ -23,33 +23,25 @@ const wrapper =
 const p = "w-full px-2 truncate";
 const icon = "mx-2 text-gray-400";
 const active = "bg-gray-50 dark:bg-gray-800";
-const button = "px-2 invisible group-hover:visible";
+const button = "mx-2 invisible group-hover:visible";
 const NoteListTile: React.FC<NoteListTileProps> = ({ note }) => {
   const [selected, setSelected] = useAtom(SelectedNoteAtom);
   const [, setNotes] = useAtom(NotesAtom);
 
   const selectNote = async () => setSelected(note._id);
-
   const deleteNote = async () => {
     try {
-      await deleter(`/api/notes/${note._id}`);
       if (selected === note._id) setSelected("");
-      setNotes((state) => {
-        if (state[note._id]) {
-          delete state[note._id];
-          return { ...state };
-        }
-        return state;
-      });
+      await deleter(`/api/notes/${note._id}`);
+      setNotes((state) => notesReducer(state, "delete", note));
     } catch {
-      console.log("failed to delete");
+      console.error("failed to delete");
     }
   };
 
-  const wrapperClass = wrapper + (selected === note._id ? " " + active : "");
   return (
-    <div className={wrapperClass} onClick={selectNote}>
-      <If condition={note.saved !== undefined && !note.saved}>
+    <div className={wrapper + (selected === note._id ? " " + active : "")} onClick={selectNote}>
+      <If condition={!note.saved}>
         <CloudOff size={16} className={icon} />
       </If>
       <p className={p}>{note.text}</p>
