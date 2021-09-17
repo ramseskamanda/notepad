@@ -1,13 +1,13 @@
 import "tailwindcss/tailwind.css";
 import Head from "next/head";
-import { NotesAtom } from "@atoms";
+import { Notes } from "@atoms";
 import { Layout } from "@components";
 import { Atom, Provider } from "jotai";
 import type { AppProps } from "next/app";
 
 function MyApp({ Component, pageProps }: AppProps) {
   const { initialState } = pageProps;
-  const initialValues: [Atom<unknown>, unknown] = [NotesAtom, initialState];
+  const initialValues: [Atom<unknown>, unknown] = [Notes, initialState];
   return (
     <Provider initialValues={[initialValues]}>
       <Head>

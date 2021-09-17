@@ -4,10 +4,10 @@ import { deleter } from "@utils";
 import { Button } from "@components";
 import { For, If } from "@components/utils";
 import { CloudOff, X } from "react-feather";
-import { NotesAtom, notesReducer, SelectedNoteAtom } from "@atoms";
+import { Notes, NotesAtom, SelectedNoteAtom } from "@atoms";
 
 export const NoteList: React.FC = () => {
-  const [notes] = useAtom(NotesAtom);
+  const [notes] = useAtom(Notes);
 
   return (
     <For fadeIn each={Object.values(notes ?? {})} render={(note) => <NoteListTile key={note._id} note={note} />} />
@@ -23,21 +23,10 @@ const wrapper =
 const p = "w-full px-2 truncate";
 const icon = "mx-2 text-gray-400";
 const active = "bg-gray-50 dark:bg-gray-800";
-const button = "mx-2 invisible group-hover:visible";
 const NoteListTile: React.FC<NoteListTileProps> = ({ note }) => {
   const [selected, setSelected] = useAtom(SelectedNoteAtom);
-  const [, setNotes] = useAtom(NotesAtom);
 
   const selectNote = async () => setSelected(note._id);
-  const deleteNote = async () => {
-    try {
-      if (selected === note._id) setSelected("");
-      await deleter(`/api/notes/${note._id}`);
-      setNotes((state) => notesReducer(state, "delete", note));
-    } catch {
-      console.error("failed to delete");
-    }
-  };
 
   return (
     <div className={wrapper + (selected === note._id ? " " + active : "")} onClick={selectNote}>
@@ -45,9 +34,27 @@ const NoteListTile: React.FC<NoteListTileProps> = ({ note }) => {
         <CloudOff size={16} className={icon} />
       </If>
       <p className={p}>{note.text}</p>
-      <div className={button}>
-        <Button icon text={<X size={14} />} onClick={deleteNote} />
-      </div>
+      <DeleteButton note={note} />
+    </div>
+  );
+};
+
+const button = "mx-2 invisible group-hover:visible";
+const DeleteButton: React.FC<{ note: Note }> = ({ note }) => {
+  const [, setNotes] = useAtom(NotesAtom);
+
+  const deleteNote = async () => {
+    try {
+      await deleter(`/api/notes/${note._id}`);
+      setNotes(["delete", note]);
+    } catch {
+      console.error("failed to delete");
+    }
+  };
+
+  return (
+    <div className={button}>
+      <Button icon text={<X size={14} />} onClick={deleteNote} />
     </div>
   );
 };
