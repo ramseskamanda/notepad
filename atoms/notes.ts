@@ -1,7 +1,7 @@
-import { atom } from "jotai";
+import { WritableAtom, atom } from "jotai";
 import { Note } from "@models";
 
-export const SelectedNoteAtom = atom<string>("");
+export const SelectedNoteAtom: WritableAtom<string, string> = atom<string>("");
 export const Notes = atom<Record<string, Note>>({});
 
 export const CurrentNoteAtom = atom<Note, Partial<Note>>(
